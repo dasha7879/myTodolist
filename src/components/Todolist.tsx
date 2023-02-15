@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { FilterType } from '../App';
+import { Button } from './Button/Button';
 // import { FilterType } from "../App"
 import { EditableSpan } from "./EditableSpan/EditableSpan"
 
@@ -30,24 +31,25 @@ export const Todolist: FC<TodolistType> = ({ title, tasks, removeTask, changeFil
         </li>
     )
 
+    const changeFilterCallback = (value: FilterType) => {
+        changeFilter(value)
+    }
+
     return (
-        // <div className="todolist">
-        //     <EditableSpan title={title} />
-        // </div>
         <div>
             <div>
                 <h3>{title}</h3>
                 <div>
                     <input />
-                    <button>+</button>
+                    <Button name={'+'} callback={()=>console.log('TODO add Tasks')} />
                 </div>
                 <ul>
                     {renderTasks}
                 </ul>
                 <div>
-                    <button onClick={() =>changeFilter('all')}>All</button>
-                    <button onClick={() =>changeFilter('active')}>Active</button>
-                    <button onClick={() =>changeFilter('completed')}>Completed</button>
+                    <Button name={'All'} callback={()=>changeFilterCallback('all')}/>
+                    <Button name={'Active'} callback={()=>changeFilterCallback('active')}/>
+                    <Button name={'Completed'} callback={()=>changeFilterCallback('completed')}/>
                 </div>
             </div>
         </div>

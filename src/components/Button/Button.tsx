@@ -1,7 +1,17 @@
 import React, { FC, useState } from 'react';
 
-export const Button = () => {
-    return <div>
+type ButtonType = {
+    name:string,
+    callback:()=>void
 
-    </div>
+}
+export const Button: FC<ButtonType> = ({name,callback}) => {
+    
+    const onClickHandler = () => {
+        callback()
+    }
+
+    return (
+        <button onClick={onClickHandler}>{name}</button>
+    )
 }
