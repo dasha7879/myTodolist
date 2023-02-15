@@ -2,62 +2,44 @@ import React, { useState } from 'react';
 import { v4 } from 'uuid'
 import './App.css';
 import { Input } from './components/Input/Input';
-import { TaskType, Todolist, TodolistType } from './components/Todolist'
+import { TaskType, Todolist } from './components/Todolist'
 
 
-export type FilterType = 'all' | 'active' | 'completed'
-
-type TasksStateType = {
-  [key: string]: TaskType[]
-}
+ export type FilterType = 'all' | 'active' | 'completed'
 
 function App() {
 
-  // const todoListTitle_1: string = "What to learn"
-  // let todolistId1 = v4();
-  // let todolistId2 = v4();
+  const [tasks, setTasks]  = useState<TaskType[]>([
+    { id: 1, title: "HTML&CSS", isDone: true },
+    { id: 2, title: "JS", isDone: true },
+    { id: 3, title: "ReactJS", isDone: false },
+    { id: 4, title: "HTML&CSS", isDone: true },
+    { id: 5, title: "JS", isDone: true },
+    { id: 6, title: "ReactJS", isDone: false }
+  ])
 
-  // let [todolists, setTodolists] = useState<Array<TodolistType>>([
-  //   { id: todolistId1, title: "What to learn", filter: "all" },
-  //   { id: todolistId2, title: "What to buy", filter: "all" }
-  // ])
+  const [filter,setFilter] = useState<FilterType>('all')
+  let tasksForTodolist = tasks;
 
-  // let [tasks, setTasks] = useState<TasksStateType>({
-  //   [todolistId1]: [
-  //     { id: v4(), title: "HTML&CSS", isDone: true },
-  //     { id: v4(), title: "JS", isDone: true }
-  //   ],
-  //   [todolistId2]: [
-  //     { id: v4(), title: "Milk", isDone: true },
-  //     { id: v4(), title: "React Book", isDone: true }
-  //   ]
-  // });
+  if(filter==='active'){
+    tasksForTodolist = tasks.filter(t=> !t.isDone)
+  }
+  if(filter === 'completed'){
+    tasksForTodolist = tasks.filter(t=> t.isDone)
+  }
+  const changeFilter = (value:FilterType) => {
+    setFilter(value)
+  }
 
+  const removeTask= (taskId:number) => {
+    return setTasks(tasks.filter(t=>t.id!== taskId))
+  }
 
   return (
-    // <div className="App">
-    //   {/* <Todolist id={todolistId1} title="What to learn" filter = 'all'/> */}
-    //   <Input  type='text' callback={()=>{}}/>
-    // </div>
     <div className="App">
-    <div>
-        <h3>What to learn</h3>
-        <div>
-            <input/>
-            <button>+</button>
-        </div>
-        <ul>
-            <li><input type="checkbox" checked={true}/> <span>HTML&CSS</span></li>
-            <li><input type="checkbox" checked={true}/> <span>JS</span></li>
-            <li><input type="checkbox" checked={false}/> <span>React</span></li>
-        </ul>
-        <div>
-            <button>All</button>
-            <button>Active</button>
-            <button>Completed</button>
-        </div>
+      <Todolist title='what to learn' tasks={tasksForTodolist} removeTask = {removeTask} changeFilter ={changeFilter} />
     </div>
-</div>
+
   );
 }
 
