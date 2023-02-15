@@ -8,13 +8,14 @@ import { EditableSpan } from "./EditableSpan/EditableSpan"
 export type TodolistType = {
     title: string
     tasks: TaskType[]
-    removeTask: (taskId: number) => void
+    removeTask: (taskId: string) => void
     changeFilter: (value: FilterType) => void
+    addTask: (value: string) => void
 }
 
 
 export type TaskType = {
-    id: number
+    id: string
     title: string
     isDone: boolean
 }
@@ -22,7 +23,7 @@ export type TaskType = {
 // {id,title,filter}
 // : FC<TodolistType>
 
-export const Todolist: FC<TodolistType> = ({ title, tasks, removeTask, changeFilter }) => {
+export const Todolist: FC<TodolistType> = ({ title, tasks, removeTask, changeFilter, addTask }) => {
 
     const renderTasks = tasks.map(t =>
         <li key={t.id}>
@@ -34,22 +35,37 @@ export const Todolist: FC<TodolistType> = ({ title, tasks, removeTask, changeFil
     const changeFilterCallback = (value: FilterType) => {
         changeFilter(value)
     }
+    const [value, setValue] = useState('')
 
+    const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.currentTarget.value)
+    }
+
+    const addTaskHandler = () => {
+        addTask(value)
+        setValue('')
+    }
+
+    const onKeyDownHandler = (e:React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.key === 'Enter'){
+            addTaskHandler()
+        }
+    }
     return (
         <div>
             <div>
                 <h3>{title}</h3>
                 <div>
-                    <input />
-                    <Button name={'+'} callback={()=>console.log('TODO add Tasks')} />
+                    <input onChange={onChangeHandler} value={value} onKeyDown={onKeyDownHandler} />
+                    <Button name={'+'} callback={addTaskHandler} />
                 </div>
                 <ul>
                     {renderTasks}
                 </ul>
                 <div>
-                    <Button name={'All'} callback={()=>changeFilterCallback('all')}/>
-                    <Button name={'Active'} callback={()=>changeFilterCallback('active')}/>
-                    <Button name={'Completed'} callback={()=>changeFilterCallback('completed')}/>
+                    <Button name={'All'} callback={() => changeFilterCallback('all')} />
+                    <Button name={'Active'} callback={() => changeFilterCallback('active')} />
+                    <Button name={'Completed'} callback={() => changeFilterCallback('completed')} />
                 </div>
             </div>
         </div>
